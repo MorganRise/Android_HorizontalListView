@@ -3,6 +3,7 @@ package jp.co.tdkn.view;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -17,6 +18,7 @@ import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.ListAdapter;
 import android.widget.WrapperListAdapter;
@@ -77,8 +79,6 @@ public class HorizontalListView extends AbsHorizontalListView {
     // Keeps focused children visible through resizes
     private FocusSelector mFocusSelector;
 
-    private ListAdapter mAdapter;
-
     public HorizontalListView(Context context) {
         this(context, null);
     }
@@ -89,6 +89,52 @@ public class HorizontalListView extends AbsHorizontalListView {
 
     public HorizontalListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        final int[] stylableListView = new int[7]; // com.android.internal.R.styleable.ListView
+        for (int i = 0; i < 7; i++) {
+            stylableListView[i] = i;
+        }
+        TypedArray a = context.obtainStyledAttributes(attrs, stylableListView,
+                defStyle, 0);
+
+        CharSequence[] entries = a.getTextArray(0); // com.android.internal.R.styleable.ListView_entries
+        if (entries != null) {
+            setAdapter(new ArrayAdapter<CharSequence>(context,
+                    android.R.layout.simple_list_item_1, entries));
+        }
+
+        final Drawable d = a.getDrawable(1); // com.android.internal.R.styleable.ListView_divider
+        if (d != null) {
+            // If a divider is specified use its intrinsic height for divider
+            // height
+            setDivider(d);
+        }
+
+        // final Drawable osHeader = a.getDrawable(
+        // com.android.internal.R.styleable.ListView_overScrollHeader);
+        // if (osHeader != null) {
+        // setOverscrollHeader(osHeader);
+        // }
+
+        // final Drawable osFooter = a.getDrawable(
+        // com.android.internal.R.styleable.ListView_overScrollFooter);
+        // if (osFooter != null) {
+        // setOverscrollFooter(osFooter);
+        // }
+
+        // Use the height specified, zero being the default
+        // final int dividerHeight = a.getDimensionPixelSize(
+        // com.android.internal.R.styleable.ListView_dividerHeight, 0);
+        // if (dividerHeight != 0) {
+        // setDividerHeight(dividerHeight);
+        // }
+
+        // mHeaderDividersEnabled =
+        // a.getBoolean(R.styleable.ListView_headerDividersEnabled, true);
+        // mFooterDividersEnabled =
+        // a.getBoolean(R.styleable.ListView_footerDividersEnabled, true);
+
+        a.recycle();
     }
 
     /**
@@ -1279,9 +1325,10 @@ public class HorizontalListView extends AbsHorizontalListView {
                         "The content of the adapter has changed but "
                                 + "ListView did not receive a notification. Make sure the content of "
                                 + "your adapter is not modified from a background thread, but only "
-                                + "from the UI thread. [in ListView(" + getId()
-                                + ", " + getClass() + ") with Adapter("
-                                + mAdapter.getClass() + ")]");
+                                + "from the UI thread. [in HorizontalListView("
+                                + getId() + ", " + getClass()
+                                + ") with Adapter(" + mAdapter.getClass()
+                                + ")]");
             }
 
             setSelectedPositionInt(mNextSelectedPosition);

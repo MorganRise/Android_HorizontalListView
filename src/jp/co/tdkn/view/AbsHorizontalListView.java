@@ -71,7 +71,7 @@ import android.widget.PopupWindow;
  * does not have a spatial definition here. For instance, subclases of this
  * class can display the content of the list in a grid, in a carousel, as stack,
  * etc.
- *
+ * 
  * @attr ref android.R.styleable#AbsListView_listSelector
  * @attr ref android.R.styleable#AbsListView_drawSelectorOnTop
  * @attr ref android.R.styleable#AbsListView_stackFromBottom
@@ -90,21 +90,34 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     private static final String TAG = "AbsHorizontalListView";
 
     /**
-     * When set, this ViewGroup should not intercept touch events. {@hide}
+     * When set, this ViewGroup should not intercept touch events. {@hide
+     * 
+     * 
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     * }
      */
     protected static final int FLAG_DISALLOW_INTERCEPT = 0x80000;
 
     /**
      * View flag indicating whether {@link #addFocusables(ArrayList, int, int)}
      * should add only accessibility focusable Views.
-     *
+     * 
      * @hide
      */
     public static final int FOCUSABLES_ACCESSIBILITY = 0x00000002;
 
     /**
      * Disables the transcript mode.
-     *
+     * 
      * @see #setTranscriptMode(int)
      */
     public static final int TRANSCRIPT_MODE_DISABLED = 0;
@@ -112,14 +125,14 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * The list will automatically scroll to the bottom when a data set change
      * notification is received and only if the last item is already visible on
      * screen.
-     *
+     * 
      * @see #setTranscriptMode(int)
      */
     public static final int TRANSCRIPT_MODE_NORMAL = 1;
     /**
      * The list will automatically scroll to the bottom, no matter what items
      * are currently visible.
-     *
+     * 
      * @see #setTranscriptMode(int)
      */
     public static final int TRANSCRIPT_MODE_ALWAYS_SCROLL = 2;
@@ -664,10 +677,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
          * called before the next frame of the scroll is rendered. In
          * particular, it will be called before any calls to
          * {@link Adapter#getView(int, View, ViewGroup)}.
-         *
+         * 
          * @param view
          *            The view whose scroll state is being reported
-         *
+         * 
          * @param scrollState
          *            The current scroll state. One of
          *            {@link #SCROLL_STATE_IDLE},
@@ -680,7 +693,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
         /**
          * Callback method to be invoked when the list or grid has been
          * scrolled. This will be called after the scroll has completed
-         *
+         * 
          * @param view
          *            The view whose scroll state is being reported
          * @param firstVisibleItem
@@ -703,7 +716,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
         /**
          * Called to allow the list item to adjust the bounds shown for its
          * selection.
-         *
+         * 
          * @param bounds
          *            On call, this contains the bounds the list has selected
          *            for the item (that is the bounds of the entire view). The
@@ -714,7 +727,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * 非公開 API へアクセスするためのラップクラス
-     *
+     * 
      * @tdkn
      */
     static final class HideApiProxy extends ReflectionProxy {
@@ -789,12 +802,6 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
                     "isScrollingInDirection", scroller, new Class<?>[] {
                             Float.class, Float.class }, new Object[] { xvel,
                             yvel });
-        }
-
-        void setInterpolator(OverScroller scroller, Interpolator interporator) {
-            invoke(OverScroller.class, "setInterpolator", scroller,
-                    new Class<?>[] { Interpolator.class },
-                    new Object[] { interporator });
         }
     }
 
@@ -875,7 +882,6 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     @Override
     public void setAdapter(ListAdapter adapter) {
         if (adapter != null) {
-            mAdapterHasStableIds = mAdapter.hasStableIds();
             if (mChoiceMode != CHOICE_MODE_NONE && mAdapterHasStableIds
                     && mCheckedIdStates == null) {
                 mCheckedIdStates = new HashMap<Long, Integer>();
@@ -894,13 +900,13 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Returns the number of items currently selected. This will only be valid
      * if the choice mode is not {@link #CHOICE_MODE_NONE} (default).
-     *
+     * 
      * <p>
      * To determine the specific items that are currently selected, use one of
      * the <code>getChecked*</code> methods.
-     *
+     * 
      * @return The number of items currently selected
-     *
+     * 
      * @see #getCheckedItemPosition()
      * @see #getCheckedItemPositions()
      * @see #getCheckedItemIds()
@@ -913,12 +919,12 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Returns the checked state of the specified position. The result is only
      * valid if the choice mode has been set to {@link #CHOICE_MODE_SINGLE} or
      * {@link #CHOICE_MODE_MULTIPLE}.
-     *
+     * 
      * @param position
      *            The item whose checked state to return
      * @return The item's checked state or <code>false</code> if choice mode is
      *         invalid
-     *
+     * 
      * @see #setChoiceMode(int)
      */
     public boolean isItemChecked(int position) {
@@ -932,10 +938,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Returns the currently checked item. The result is only valid if the
      * choice mode has been set to {@link #CHOICE_MODE_SINGLE}.
-     *
+     * 
      * @return The position of the currently checked item or
      *         {@link #INVALID_POSITION} if nothing is selected
-     *
+     * 
      * @see #setChoiceMode(int)
      */
     public int getCheckedItemPosition() {
@@ -950,7 +956,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Returns the set of checked items in the list. The result is only valid if
      * the choice mode has not been set to {@link #CHOICE_MODE_NONE}.
-     *
+     * 
      * @return A SparseBooleanArray which will return true for each call to
      *         get(int position) where position is a position in the list, or
      *         <code>null</code> if the choice mode is set to
@@ -967,7 +973,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Returns the set of checked items ids. The result is only valid if the
      * choice mode has not been set to {@link #CHOICE_MODE_NONE} and the adapter
      * has stable IDs. ({@link ListAdapter#hasStableIds()} == {@code true})
-     *
+     * 
      * @return A new array which contains the id of each checked item in the
      *         list.
      */
@@ -1008,7 +1014,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Sets the checked state of the specified position. The is only valid if
      * the choice mode has been set to {@link #CHOICE_MODE_SINGLE} or
      * {@link #CHOICE_MODE_MULTIPLE}.
-     *
+     * 
      * @param position
      *            The item whose checked state is to be checked
      * @param value
@@ -1169,7 +1175,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * @see #setChoiceMode(int)
-     *
+     * 
      * @return The current choice mode
      */
     public int getChoiceMode() {
@@ -1183,7 +1189,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * to be in a chosen state. By setting the choiceMode to
      * {@link #CHOICE_MODE_MULTIPLE}, the list allows any number of items to be
      * chosen.
-     *
+     * 
      * @param choiceMode
      *            One of {@link #CHOICE_MODE_NONE}, {@link #CHOICE_MODE_SINGLE},
      *            or {@link #CHOICE_MODE_MULTIPLE}
@@ -1215,10 +1221,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Set a {@link MultiChoiceModeListener} that will manage the lifecycle of
      * the selection {@link ActionMode}. Only used when the choice mode is set
      * to {@link #CHOICE_MODE_MULTIPLE_MODAL}.
-     *
+     * 
      * @param listener
      *            Listener that will manage the selection mode
-     *
+     * 
      * @see #setChoiceMode(int)
      */
     public void setMultiChoiceModeListener(MultiChoiceModeListener listener) {
@@ -1251,16 +1257,16 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * you use a list in which items have different heights, the scrollbar will
      * change appearance as the user scrolls through the list. To avoid this
      * issue, you need to disable this property.
-     *
+     * 
      * When smooth scrollbar is disabled, the position and size of the scrollbar
      * thumb is based solely on the number of items in the adapter and the
      * position of the visible items inside the adapter. This provides a stable
      * scrollbar as the user navigates through a list of items with varying
      * heights.
-     *
+     * 
      * @param enabled
      *            Whether or not to enable smooth scrollbar.
-     *
+     * 
      * @see #setSmoothScrollbarEnabled(boolean)
      * @attr ref android.R.styleable#AbsListView_smoothScrollbar
      */
@@ -1270,9 +1276,9 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * Returns the current state of the fast scroll feature.
-     *
+     * 
      * @return True if smooth scrollbar is enabled is enabled, false otherwise.
-     *
+     * 
      * @see #setSmoothScrollbarEnabled(boolean)
      */
     @ViewDebug.ExportedProperty
@@ -1283,7 +1289,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Set the listener that will receive notifications every time the list
      * scrolls.
-     *
+     * 
      * @param l
      *            the scroll listener
      */
@@ -1308,9 +1314,9 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Indicates whether the children's drawing cache is used during a scroll.
      * By default, the drawing cache is enabled but this will consume more
      * memory.
-     *
+     * 
      * @return true if the scrolling cache is enabled, false otherwise
-     *
+     * 
      * @see #setScrollingCacheEnabled(boolean)
      * @see View#setDrawingCacheEnabled(boolean)
      */
@@ -1322,14 +1328,14 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Enables or disables the children's drawing cache during a scroll. By
      * default, the drawing cache is enabled but this will use more memory.
-     *
+     * 
      * When the scrolling cache is enabled, the caches are kept after the first
      * scrolling. You can manually clear the cache by calling
      * {@link android.view.ViewGroup#setChildrenDrawingCacheEnabled(boolean)}.
-     *
+     * 
      * @param enabled
      *            true to enable the scroll cache, false otherwise
-     *
+     * 
      * @see #isScrollingCacheEnabled()
      * @see View#setDrawingCacheEnabled(boolean)
      */
@@ -1345,10 +1351,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * view has focus will filter the children to match the users input. Note
      * that the {@link Adapter} used by this view must implement the
      * {@link Filterable} interface.
-     *
+     * 
      * @param textFilterEnabled
      *            true to enable type filtering, false otherwise
-     *
+     * 
      * @see Filterable
      */
     public void setTextFilterEnabled(boolean textFilterEnabled) {
@@ -1357,9 +1363,9 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * Indicates whether type filtering is enabled for this view
-     *
+     * 
      * @return true if type filtering is enabled, false otherwise
-     *
+     * 
      * @see #setTextFilterEnabled(boolean)
      * @see Filterable
      */
@@ -1794,10 +1800,14 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
             mRecycler.markChildrenDirty();
         }
 
+        // if (mFastScroller != null && mItemCount != mOldItemCount) {
+        // mFastScroller.onItemCountChanged(mOldItemCount, mItemCount);
+        // }
+
         layoutChildren();
         mInLayout = false;
 
-        mOverscrollMax = (b - t) / OVERSCROLL_LIMIT_DIVISOR;
+        mOverscrollMax = (r - l) / OVERSCROLL_LIMIT_DIVISOR;
     }
 
     /**
@@ -1856,10 +1866,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * List padding is the maximum of the normal view's padding and the padding
      * of the selector.
-     *
+     * 
      * @see android.view.View#getPaddingTop()
      * @see #getSelector()
-     *
+     * 
      * @return The top list padding.
      */
     public int getListPaddingTop() {
@@ -1869,10 +1879,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * List padding is the maximum of the normal view's padding and the padding
      * of the selector.
-     *
+     * 
      * @see android.view.View#getPaddingBottom()
      * @see #getSelector()
-     *
+     * 
      * @return The bottom list padding.
      */
     public int getListPaddingBottom() {
@@ -1882,10 +1892,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * List padding is the maximum of the normal view's padding and the padding
      * of the selector.
-     *
+     * 
      * @see android.view.View#getPaddingLeft()
      * @see #getSelector()
-     *
+     * 
      * @return The left list padding.
      */
     public int getListPaddingLeft() {
@@ -1895,10 +1905,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * List padding is the maximum of the normal view's padding and the padding
      * of the selector.
-     *
+     * 
      * @see android.view.View#getPaddingRight()
      * @see #getSelector()
-     *
+     * 
      * @return The right list padding.
      */
     public int getListPaddingRight() {
@@ -1910,14 +1920,14 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * position. This is called when we have already discovered that the view is
      * not available for reuse in the recycle bin. The only choices left are
      * converting an old view or making a new one.
-     *
+     * 
      * @param position
      *            The position to display
      * @param isScrap
      *            Array of at least 1 boolean, the first entry will become true
      *            if the returned view was taken from the scrap heap, false if
      *            otherwise.
-     *
+     * 
      * @return A view displaying the data associated with the specified position
      */
     View obtainView(int position, boolean[] isScrap) {
@@ -2098,7 +2108,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Indicates whether this view is in a state where the selector should be
      * drawn. This will happen if we have focus but are not in touch mode, or we
      * are in the middle of displaying the pressed state for an item.
-     *
+     * 
      * @return True if the selector should be shown
      */
     boolean shouldShowSelector() {
@@ -2117,11 +2127,11 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Controls whether the selection highlight drawable should be drawn on left
      * of the item or behind it.
-     *
+     * 
      * @param onLeft
      *            If true, the selector will be drawn on the item it is
      *            highlighting. The default is false.
-     *
+     * 
      * @attr ref android.R.styleable#AbsListView_drawSelectorOnTop
      */
     public void setDrawSelectorOnLeft(boolean onLeft) {
@@ -2131,10 +2141,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Set a Drawable that should be used to highlight the currently selected
      * item.
-     *
+     * 
      * @param resID
      *            A Drawable resource to use as the selection highlight.
-     *
+     * 
      * @attr ref android.R.styleable#AbsListView_listSelector
      */
     public void setSelector(int resID) {
@@ -2160,7 +2170,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Returns the selector {@link android.graphics.drawable.Drawable} that is
      * used to draw the selection in the list.
-     *
+     * 
      * @return the drawable used to display the selector
      */
     public Drawable getSelector() {
@@ -2397,7 +2407,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Creates the ContextMenuInfo returned from {@link #getContextMenuInfo()}.
      * This methods knows the view, position and ID of the item that received
      * the long press.
-     *
+     * 
      * @param view
      *            The view that received the long press.
      * @param position
@@ -2414,7 +2424,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * A base class for Runnables that will check that their view is still
      * attached to the original window as when the Runnable was created.
-     *
+     * 
      */
     private class WindowRunnnable {
         private int mOriginalAttachCount;
@@ -2618,7 +2628,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * Maps a point to a position in the list.
-     *
+     * 
      * @param x
      *            X in local coordinate
      * @param y
@@ -2649,7 +2659,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * Maps a point to a the rowId of the item which intersects that point.
-     *
+     * 
      * @param x
      *            X in local coordinate
      * @param y
@@ -3515,7 +3525,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * {@link android.widget.AbsHorizontalListView.OnScrollListener}, if any.
      * The state change is fired only if the specified state is different from
      * the previously known state.
-     *
+     * 
      * @param newState
      *            The new scroll state.
      */
@@ -3532,7 +3542,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Responsible for fling behavior. Use {@link #start(int)} to initiate a
      * fling. Each frame of the fling is handled in {@link #run()}. A
      * FlingRunnable will keep re-posting itself until the fling is done.
-     *
+     * 
      */
     private class FlingRunnable implements Runnable {
         /**
@@ -3579,25 +3589,29 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
         void start(int initialVelocity) {
             int initialX = initialVelocity < 0 ? Integer.MAX_VALUE : 0;
             mLastFlingX = initialX;
-            mHideApiProxy.setInterpolator(mScroller, null);
             mScroller.fling(initialX, 0, initialVelocity, 0, Integer.MAX_VALUE,
                     0, Integer.MAX_VALUE, 0);
             mTouchMode = TOUCH_MODE_FLING;
-            postOnAnimation(this);
+            post(this);
 
             if (PROFILE_FLINGING) {
                 if (!mFlingProfilingStarted) {
-                    Debug.startMethodTracing("AbsHorizontalListViewFling");
+                    Debug.startMethodTracing("AbsListViewFling");
                     mFlingProfilingStarted = true;
                 }
             }
+
+            // if (mFlingStrictSpan == null) {
+            // mFlingStrictSpan = StrictMode
+            // .enterCriticalSpan("AbsListView-fling");
+            // }
         }
 
         void startSpringback() {
             if (mScroller.springBack(getScrollX(), 0, 0, 0, 0, 0)) {
                 mTouchMode = TOUCH_MODE_OVERFLING;
                 invalidate();
-                postOnAnimation(this);
+                post(this);
             } else {
                 mTouchMode = TOUCH_MODE_REST;
                 reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
@@ -3605,22 +3619,26 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
         }
 
         void startOverfling(int initialVelocity) {
-            mHideApiProxy.setInterpolator(mScroller, null);
-            mScroller.fling(getScrollX(), 0, initialVelocity, 0,
-                    Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 0, getWidth(), 0);
+            mScroller.fling(getScrollX(), 0, initialVelocity, 0, 0,
+                    Integer.MIN_VALUE, Integer.MAX_VALUE, 0, getWidth(), 0);
             mTouchMode = TOUCH_MODE_OVERFLING;
             invalidate();
-            postOnAnimation(this);
+            post(this);
         }
 
         void edgeReached(int delta) {
-            mScroller.notifyVerticalEdgeReached(0, getScrollX(),
+            mScroller.notifyHorizontalEdgeReached(getScrollX(), 0,
                     mOverflingDistance);
             final int overscrollMode = getOverScrollMode();
             if (overscrollMode == OVER_SCROLL_ALWAYS
                     || (overscrollMode == OVER_SCROLL_IF_CONTENT_SCROLLS && !contentFits())) {
                 mTouchMode = TOUCH_MODE_OVERFLING;
-                final int vel = (int) mScroller.getCurrVelocity();
+                // final int vel = (int) mScroller.getCurrVelocity();
+                // if (delta > 0) {
+                // mEdgeGlowTop.onAbsorb(vel);
+                // } else {
+                // mEdgeGlowBottom.onAbsorb(vel);
+                // }
             } else {
                 mTouchMode = TOUCH_MODE_REST;
                 if (mPositionScroller != null) {
@@ -3628,17 +3646,15 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
                 }
             }
             invalidate();
-            postOnAnimation(this);
+            post(this);
         }
 
-        void startScroll(int distance, int duration, boolean linear) {
+        void startScroll(int distance, int duration) {
             int initialX = distance < 0 ? Integer.MAX_VALUE : 0;
             mLastFlingX = initialX;
-            mHideApiProxy.setInterpolator(mScroller,
-                    linear ? sLinearInterpolator : null);
             mScroller.startScroll(initialX, 0, distance, 0, duration);
             mTouchMode = TOUCH_MODE_FLING;
-            postOnAnimation(this);
+            post(this);
         }
 
         void endFling() {
@@ -3650,6 +3666,11 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
             reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
             clearScrollingCache();
             mScroller.abortAnimation();
+
+            // if (mFlingStrictSpan != null) {
+            // mFlingStrictSpan.finish();
+            // mFlingStrictSpan = null;
+            // }
         }
 
         void flywheelTouch() {
@@ -3720,8 +3741,8 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
                 // Don't stop just because delta is zero (it could have been
                 // rounded)
-                final boolean atEdge = trackMotionScroll(delta, delta);
-                final boolean atEnd = atEdge && (delta != 0);
+                final boolean atEnd = trackMotionScroll(delta, delta)
+                        && (delta != 0);
                 if (atEnd) {
                     if (motionView != null) {
                         // Tweak the scroll for how far we overshot
@@ -3736,10 +3757,9 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
                 }
 
                 if (more && !atEnd) {
-                    if (atEdge)
-                        invalidate();
+                    invalidate();
                     mLastFlingX = x;
-                    postOnAnimation(this);
+                    post(this);
                 } else {
                     endFling();
 
@@ -3748,6 +3768,11 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
                             Debug.stopMethodTracing();
                             mFlingProfilingStarted = false;
                         }
+
+                        // if (mFlingStrictSpan != null) {
+                        // mFlingStrictSpan.finish();
+                        // mFlingStrictSpan = null;
+                        // }
                     }
                 }
                 break;
@@ -3777,7 +3802,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
                         }
                     } else {
                         invalidate();
-                        postOnAnimation(this);
+                        post(this);
                     }
                 } else {
                     endFling();
@@ -4253,7 +4278,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * The amount of friction applied to flings. The default value is
      * {@link ViewConfiguration#getScrollFriction}.
-     *
+     * 
      * @return A scalar dimensionless value representing the coefficient of
      *         friction.
      */
@@ -4267,7 +4292,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Sets a scale factor for the fling velocity. The initial scale factor is
      * 1.0.
-     *
+     * 
      * @param scale
      *            The scale factor to multiply the velocity by.
      */
@@ -4278,7 +4303,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Smoothly scroll to the specified adapter position. The view will scroll
      * such that the indicated position is displayed.
-     *
+     * 
      * @param position
      *            Scroll to this adapter position.
      */
@@ -4296,7 +4321,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * would scroll the first or last item beyond the boundaries of the list) it
      * will get as close as possible. The scroll will take <code>duration</code>
      * milliseconds to complete.
-     *
+     * 
      * @param position
      *            Position to scroll to
      * @param offset
@@ -4319,7 +4344,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * from the top edge of the view. If this is impossible, (e.g. the offset
      * would scroll the first or last item beyond the boundaries of the list) it
      * will get as close as possible.
-     *
+     * 
      * @param position
      *            Position to scroll to
      * @param offset
@@ -4337,7 +4362,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Smoothly scroll to the specified adapter position. The view will scroll
      * such that the indicated position is displayed, but it will stop early if
      * scrolling further would scroll boundPosition out of view.
-     *
+     * 
      * @param position
      *            Scroll to this adapter position.
      * @param boundPosition
@@ -4353,7 +4378,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * Smoothly scroll by distance pixels over duration milliseconds.
-     *
+     * 
      * @param distance
      *            Distance to scroll in pixels.
      * @param duration
@@ -4379,7 +4404,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
                 || mItemCount == 0
                 || childCount == 0
                 || (firstPos == 0 && getChildAt(0).getLeft() == leftLimit && distance < 0)
-                || (lastPos == mItemCount
+                || (lastPos == mItemCount - 1
                         && getChildAt(childCount - 1).getRight() == rightLimit && distance > 0)) {
             mFlingRunnable.endFling();
             if (mPositionScroller != null) {
@@ -4387,7 +4412,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
             }
         } else {
             reportScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
-            mFlingRunnable.startScroll(distance, duration, linear);
+            mFlingRunnable.startScroll(distance, duration);
         }
     }
 
@@ -4463,7 +4488,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * Track a motion scroll
-     *
+     * 
      * @param deltaX
      *            Amount to offset mMotionView. This is the accumulated delta
      *            since the motion began. Positive numbers mean the user's
@@ -4639,7 +4664,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * children that remain on screen are shifted and the other ones are
      * discarded. The role of this method is to fill the gap thus created by
      * performing a partial layout in the empty space.
-     *
+     * 
      * @param right
      *            true if the scroll is going right, false if it is going left
      */
@@ -4679,7 +4704,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Find the row closest to x. This row will be used as the motion row when
      * scrolling
-     *
+     * 
      * @param x
      *            Where the user touched
      * @return The position of the first (or only) item in the row containing x
@@ -4689,7 +4714,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Find the row closest to x. This row will be used as the motion row when
      * scrolling.
-     *
+     * 
      * @param x
      *            Where the user touched
      * @return The position of the first (or only) item in the row closest to x
@@ -4729,7 +4754,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * Makes the item at the supplied position selected.
-     *
+     * 
      * @param position
      *            the position of the new selection
      */
@@ -4738,7 +4763,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Attempt to bring the selection back if the user is switching from touch
      * to trackball mode
-     *
+     * 
      * @return Whether selection was set to something.
      */
     boolean resurrectSelection() {
@@ -4904,7 +4929,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * the direction of focus navigation between them? The direction basically
      * helps figure out more quickly what is self evident by the relationship
      * between the rects...
-     *
+     * 
      * @param source
      *            the source rectangle
      * @param dest
@@ -4984,10 +5009,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Puts the list or grid into transcript mode. In this mode the list or grid
      * will always scroll to the bottom to show new items.
-     *
+     * 
      * @param mode
      *            the transcript mode to set
-     *
+     * 
      * @see #TRANSCRIPT_MODE_DISABLED
      * @see #TRANSCRIPT_MODE_NORMAL
      * @see #TRANSCRIPT_MODE_ALWAYS_SCROLL
@@ -4998,7 +5023,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
     /**
      * Returns the current transcript mode.
-     *
+     * 
      * @return {@link #TRANSCRIPT_MODE_DISABLED},
      *         {@link #TRANSCRIPT_MODE_NORMAL} or
      *         {@link #TRANSCRIPT_MODE_ALWAYS_SCROLL}
@@ -5015,12 +5040,12 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * When set to a non-zero value, the cache color hint indicates that this
      * list is always drawn on top of a solid, single-color, opaque background.
-     *
+     * 
      * Zero means that what's behind this object is translucent (non solid) or
      * is not made of a single color. This hint will not affect any existing
      * background drawable set on this view ( typically set via
      * {@link #setBackgroundDrawable(Drawable)}).
-     *
+     * 
      * @param color
      *            The background color
      */
@@ -5038,7 +5063,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * When set to a non-zero value, the cache color hint indicates that this
      * list is always drawn on top of a solid, single-color, opaque background
-     *
+     * 
      * @return The cache color hint
      */
     @ViewDebug.ExportedProperty(category = "drawing")
@@ -5051,7 +5076,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * AbsHorizontalListView into the supplied List. This includes views
      * displayed on the screen as well as views stored in
      * AbsHorizontalListView's internal view recycler.
-     *
+     * 
      * @param views
      *            A list into which to put the reclaimed views
      */
@@ -5090,11 +5115,11 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * Sets the recycler listener to be notified whenever a View is set aside in
      * the recycler for later reuse. This listener can be used to free resources
      * associated to the View.
-     *
+     * 
      * @param listener
      *            The recycler listener to be notified of views set aside in the
      *            recycler.
-     *
+     * 
      * @see android.widget.AbsHorizontalListView.RecycleBin
      * @see android.widget.AbsHorizontalListView.RecyclerListener
      */
@@ -5105,10 +5130,10 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     /**
      * Offset the vertical location of all children of this view by the
      * specified number of pixels.
-     *
+     * 
      * @param offset
      *            the number of pixels to offset
-     *
+     * 
      * @hide
      */
     public void offsetChildrenLeftAndRight(int offset) {
@@ -5184,7 +5209,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     public interface MultiChoiceModeListener extends ActionMode.Callback {
         /**
          * Called when an item is checked or unchecked during selection mode.
-         *
+         * 
          * @param mode
          *            The {@link ActionMode} providing the selection mode
          * @param position
@@ -5286,7 +5311,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
         /**
          * The position the view was removed from when pulled out of the scrap
          * heap.
-         *
+         * 
          * @hide
          */
         int scrappedFromPosition;
@@ -5318,7 +5343,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * A RecyclerListener is used to receive a notification whenever a View is
      * placed inside the RecycleBin's scrap heap. This listener is used to free
      * resources associated to Views placed in the RecycleBin.
-     *
+     * 
      * @see android.widget.AbsHorizontalListView.RecycleBin
      * @see android.widget.AbsHorizontalListView#setRecyclerListener(android.widget.AbsHorizontalListView.RecyclerListener)
      */
@@ -5327,7 +5352,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
          * Indicates that the specified View was moved into the recycler's scrap
          * heap. The view is not displayed on screen any more and any expensive
          * resource associated with the view should be discarded.
-         *
+         * 
          * @param view
          */
         void onMovedToScrapHeap(View view);
@@ -5341,7 +5366,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
      * layout, all views in ActiveViews are demoted to ScrapViews. ScrapViews
      * are old views that could potentially be used by the adapter to avoid
      * allocating views unnecessarily.
-     *
+     * 
      * @see android.widget.AbsHorizontalListView#setRecyclerListener(android.widget.AbsHorizontalListView.RecyclerListener)
      * @see android.widget.AbsHorizontalListView.RecyclerListener
      */
@@ -5448,7 +5473,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
         /**
          * Fill ActiveViews with all of the children of the
          * AbsHorizontalListView.
-         *
+         * 
          * @param childCount
          *            The minimum number of views mActiveViews should hold
          * @param firstActivePosition
@@ -5480,7 +5505,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
         /**
          * Get the view corresponding to the specified position. The view will
          * be removed from mActiveViews if it is found.
-         *
+         * 
          * @param position
          *            The position to look up in mActiveViews
          * @return The view if it is found, null otherwise
@@ -5535,7 +5560,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
         /**
          * Put a view into the ScrapViews list. These views are unordered.
-         *
+         * 
          * @param scrap
          *            The view to add
          */
@@ -5699,7 +5724,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
         /**
          * Updates the cache color hint of all known views.
-         *
+         * 
          * @param color
          *            The new cache color hint.
          */
