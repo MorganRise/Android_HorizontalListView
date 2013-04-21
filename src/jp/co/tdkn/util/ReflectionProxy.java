@@ -1,6 +1,7 @@
 package jp.co.tdkn.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
@@ -14,6 +15,18 @@ public class ReflectionProxy {
 
     private final HashMap<String, Field> mFieldCache = new HashMap<String, Field>();
     private final HashMap<String, Method> mMethodCache = new HashMap<String, Method>();
+
+    protected final <T> Object getFieldValue(Class<T> cl, String fieldName,
+            T instance) {
+        try {
+            Field f = getField(cl, fieldName);
+            return f.get(instance);
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException(fieldName + " doesn't exists.");
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(fieldName + " cannot access.");
+        }
+    }
 
     protected final <T> int getFieldValueAsInt(Class<T> cl, String fieldName,
             T instance) {
@@ -73,6 +86,21 @@ public class ReflectionProxy {
         mFieldCache.put(fieldName, f);
 
         return f;
+    }
+
+    protected final <T> Object invoke(Class<T> cl, String methodName,
+            T instance, Class<?>[] paramTypes, Object[] params) {
+        try {
+            Method m = getMethod(cl, methodName, paramTypes);
+            return m.invoke(instance, params);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(methodName + " doesn't exists.");
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(methodName + " cannot access.");
+        } catch (InvocationTargetException e) {
+            throw new IllegalArgumentException(methodName
+                    + " mismatch invocation target.");
+        }
     }
 
     protected final Method getMethod(Class<?> cl, String methodName,

@@ -1,8 +1,6 @@
-package jp.co.tdkn.dialog;
+package jp.co.tdkn.view;
 
 import java.util.ArrayList;
-
-import jp.co.tdkn.util.ReflectionProxy;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -18,13 +16,12 @@ import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Checkable;
 import android.widget.ListAdapter;
 import android.widget.WrapperListAdapter;
 
-public class HorizontalListView extends AbsListView {
+public class HorizontalListView extends AbsHorizontalListView {
     /**
      * Used to indicate a no preference for a position type.
      */
@@ -81,8 +78,6 @@ public class HorizontalListView extends AbsListView {
     private FocusSelector mFocusSelector;
 
     private ListAdapter mAdapter;
-
-    private final HideApiProxy mHideApiProxy = new HideApiProxy();
 
     public HorizontalListView(Context context) {
         this(context, null);
@@ -216,11 +211,7 @@ public class HorizontalListView extends AbsListView {
             mRecycler.setViewTypeCount(mAdapter.getViewTypeCount());
 
             int position;
-            if (mStackFromBottom) {
-                position = lookForSelectablePosition(mItemCount - 1, false);
-            } else {
-                position = lookForSelectablePosition(0, true);
-            }
+            position = lookForSelectablePosition(0, true);
             setSelectedPositionInt(position);
             setNextSelectedPositionInt(position);
 
@@ -360,7 +351,7 @@ public class HorizontalListView extends AbsListView {
         final int count = getChildCount();
         if (right) {
             int paddingLeft = 0;
-            if ((mGroupFlags & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
+            if ((mHideApiProxy.mGroupFlags(this) & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
                 paddingLeft = getListPaddingLeft();
             }
             final int startOffset = count > 0 ? getChildAt(count - 1)
@@ -369,7 +360,7 @@ public class HorizontalListView extends AbsListView {
             correctTooHigh(getChildCount());
         } else {
             int paddingRight = 0;
-            if ((mGroupFlags & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
+            if ((mHideApiProxy.mGroupFlags(this) & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
                 paddingRight = getListPaddingRight();
             }
             final int startOffset = count > 0 ? getChildAt(0).getLeft()
@@ -395,8 +386,8 @@ public class HorizontalListView extends AbsListView {
     private View fillRight(int pos, int nextLeft) {
         View selectedView = null;
 
-        int end = (mRight - mLeft);
-        if ((mGroupFlags & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
+        int end = (getRight() - getLeft());
+        if ((mHideApiProxy.mGroupFlags(this) & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
             end -= mListPadding.right;
         }
 
@@ -406,7 +397,7 @@ public class HorizontalListView extends AbsListView {
             View child = makeAndAddView(pos, nextLeft, true, mListPadding.left,
                     selected);
 
-            nextTop = child.getBottom() + mDividerHeight;
+            nextLeft = child.getRight() + mDividerWidth;
             if (selected) {
                 selectedView = child;
             }
@@ -432,14 +423,14 @@ public class HorizontalListView extends AbsListView {
         View selectedView = null;
 
         int end = 0;
-        if ((mGroupFlags & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
+        if ((mHideApiProxy.mGroupFlags(this) & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
             end = mListPadding.left;
         }
 
         while (nextRight > end && pos >= 0) {
             // is this the selected item?
             boolean selected = pos == mSelectedPosition;
-            View child = makeAndAddView(pos, nextBottom, false,
+            View child = makeAndAddView(pos, nextRight, false,
                     mListPadding.top, selected);
             nextRight = child.getLeft() - mDividerWidth;
             if (selected) {
@@ -498,11 +489,7 @@ public class HorizontalListView extends AbsListView {
 
         fillPrevAndNext(sel, position);
 
-        if (!mStackFromBottom) {
-            correctTooHigh(getChildCount());
-        } else {
-            correctTooLow(getChildCount());
-        }
+        correctTooHigh(getChildCount());
 
         return sel;
     }
@@ -581,11 +568,7 @@ public class HorizontalListView extends AbsListView {
         // Fill in views above and below
         fillPrevAndNext(sel, selectedPosition);
 
-        if (!mStackFromBottom) {
-            correctTooHigh(getChildCount());
-        } else {
-            correctTooLow(getChildCount());
-        }
+        correctTooHigh(getChildCount());
 
         return sel;
     }
@@ -638,7 +621,7 @@ public class HorizontalListView extends AbsListView {
      * @param position
      *            Scroll to this adapter position.
      */
-    @android.view.RemotableViewMethod
+    // @android.view.RemotableViewMethod
     public void smoothScrollToPosition(int position) {
         super.smoothScrollToPosition(position);
     }
@@ -650,7 +633,7 @@ public class HorizontalListView extends AbsListView {
      * @param offset
      *            The amount to offset from the adapter position to scroll to.
      */
-    @android.view.RemotableViewMethod
+    // @android.view.RemotableViewMethod
     public void smoothScrollByOffset(int offset) {
         super.smoothScrollByOffset(offset);
     }
@@ -736,7 +719,7 @@ public class HorizontalListView extends AbsListView {
             }
 
             // Fill in views above and below
-            fillUp(mSelectedPosition - 2, sel.getLeft() - dividerLeft);
+            fillLeft(mSelectedPosition - 2, sel.getLeft() - dividerWidth);
             adjustViewsLeftOrRight();
             fillRight(mSelectedPosition + 1, sel.getRight() + dividerWidth);
         } else if (delta < 0) {
@@ -837,8 +820,8 @@ public class HorizontalListView extends AbsListView {
                 final int childPosition = mFirstPosition
                         + indexOfChild(focusedChild);
                 final int childRight = focusedChild.getRight();
-                final int offset = Math
-                        .max(0, childRight - (h - mPaddingRight));
+                final int offset = Math.max(0, childRight
+                        - (h - getPaddingRight()));
                 final int left = focusedChild.getLeft() - offset;
                 if (mFocusSelector == null) {
                     mFocusSelector = new FocusSelector();
@@ -895,13 +878,13 @@ public class HorizontalListView extends AbsListView {
 
         if (heightMode == MeasureSpec.UNSPECIFIED) {
             heightSize = mListPadding.top + mListPadding.bottom + childHeight
-                    + getHorizontalScrollbarWidth();
+                    + getHorizontalScrollbarHeight();
         } else {
             heightSize |= (childState & MEASURED_STATE_MASK);
         }
 
         setMeasuredDimension(widthSize, heightSize);
-        mHeighMeasureSpec = heightMeasureSpec;
+        mHeightMeasureSpec = heightMeasureSpec;
     }
 
     private void measureScrapChild(View child, int position,
@@ -915,8 +898,6 @@ public class HorizontalListView extends AbsListView {
         p.viewType = mAdapter.getItemViewType(position);
         p.forceAdd = true;
 
-        int childHeightSpec = ViewGroup.getChildMeasureSpec(widthMeasureSpec,
-                mListPadding.top + mListPadding.bottom, p.height);
         int lpWidth = p.width;
         int childWidthSpec;
         if (lpWidth > 0) {
@@ -926,6 +907,8 @@ public class HorizontalListView extends AbsListView {
             childWidthSpec = MeasureSpec.makeMeasureSpec(0,
                     MeasureSpec.UNSPECIFIED);
         }
+        int childHeightSpec = ViewGroup.getChildMeasureSpec(heightMeasureSpec,
+                mListPadding.top + mListPadding.bottom, p.height);
         child.measure(childWidthSpec, childHeightSpec);
     }
 
@@ -990,14 +973,14 @@ public class HorizontalListView extends AbsListView {
         // mItemCount - 1 since endPosition parameter is inclusive
         endPosition = (endPosition == NO_POSITION) ? adapter.getCount() - 1
                 : endPosition;
-        final AbsListView.RecycleBin recycleBin = mRecycler;
+        final AbsHorizontalListView.RecycleBin recycleBin = mRecycler;
         final boolean recyle = recycleOnMeasure();
         final boolean[] isScrap = mIsScrap;
 
         for (i = startPosition; i <= endPosition; ++i) {
             child = obtainView(i, isScrap);
 
-            measureScrapChild(child, i, widthMeasureSpec);
+            measureScrapChild(child, i, heightMeasureSpec);
 
             if (i > 0) {
                 // Count the divider for all but one child
@@ -1081,7 +1064,7 @@ public class HorizontalListView extends AbsListView {
         // This will correct for the top of the first view not touching the
         // top of the list
         adjustViewsLeftOrRight();
-        below = fillRight(position + 1, temp.getRight() + dividerWidth);
+        next = fillRight(position + 1, temp.getRight() + dividerWidth);
         int childCount = getChildCount();
         if (childCount > 0) {
             correctTooHigh(childCount);
@@ -1117,7 +1100,7 @@ public class HorizontalListView extends AbsListView {
             final int lastRight = lastChild.getRight();
 
             // This is right of our drawable area
-            final int end = (mRight - mLeft) - mListPadding.right;
+            final int end = (getRight() - getLeft()) - mListPadding.right;
 
             // This is how far the right edge of the last view is from the
             // right of the drawable area
@@ -1176,7 +1159,7 @@ public class HorizontalListView extends AbsListView {
             final int start = mListPadding.left;
 
             // This is right of our drawable area
-            final int end = (mRight - mLeft) - mListPadding.right;
+            final int end = (getRight() - getLeft()) - mListPadding.right;
 
             // This is how far the top edge of the first view is from the left
             // of
@@ -1235,7 +1218,7 @@ public class HorizontalListView extends AbsListView {
             }
 
             int childrenLeft = mListPadding.left;
-            int childrenRight = mRight - mLeft - mListPadding.right;
+            int childrenRight = getRight() - getLeft() - mListPadding.right;
 
             int childCount = getChildCount();
             int index = 0;
@@ -1333,7 +1316,7 @@ public class HorizontalListView extends AbsListView {
                 // the
                 // data hasn't changed, or if the focused position is a header
                 // or footer
-                if (!dataChanged || isDirectChildHeaderOrFooter(focusedChild)) {
+                if (!dataChanged /* || isDirectChildHeaderOrFooter(focusedChild) */) {
                     focusLayoutRestoreDirectChild = focusedChild;
                     // remember the specific view that had focus
                     focusLayoutRestoreView = findFocus();
@@ -1552,10 +1535,10 @@ public class HorizontalListView extends AbsListView {
         // Respect layout params that are already in the view. Otherwise make
         // some up...
         // noinspection unchecked
-        AbsListView.LayoutParams p = (AbsListView.LayoutParams) child
+        AbsHorizontalListView.LayoutParams p = (AbsHorizontalListView.LayoutParams) child
                 .getLayoutParams();
         if (p == null) {
-            p = new AbsListView.LayoutParams(
+            p = new AbsHorizontalListView.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT, 0);
         }
@@ -1569,7 +1552,7 @@ public class HorizontalListView extends AbsListView {
             if (p.viewType == AdapterView.ITEM_VIEW_TYPE_HEADER_OR_FOOTER) {
                 p.recycledHeaderFooter = true;
             }
-            addViewInLayout(child, flowDown ? -1 : 0, p, true);
+            addViewInLayout(child, flowRight ? -1 : 0, p, true);
         }
 
         if (updateChildSelected) {
@@ -1624,7 +1607,8 @@ public class HorizontalListView extends AbsListView {
         }
 
         if (recycled
-                && (((AbsListView.LayoutParams) child.getLayoutParams()).scrappedFromPosition) != position) {
+                && (((AbsHorizontalListView.LayoutParams) child
+                        .getLayoutParams()).scrappedFromPosition) != position) {
             child.jumpDrawablesToCurrentState();
         }
     }
@@ -1675,11 +1659,11 @@ public class HorizontalListView extends AbsListView {
 
         if (position >= 0) {
             mLayoutMode = LAYOUT_SPECIFIC;
-            mSpecificTop = mListPadding.left + x;
+            mSpecificLeft = mListPadding.left + x;
 
             if (mNeedSync) {
                 mSyncPosition = position;
-                mSyncRowId = mAdapter.getItemId(position);
+                mSyncColId = mAdapter.getItemId(position);
             }
 
             requestLayout();
@@ -1919,15 +1903,15 @@ public class HorizontalListView extends AbsListView {
                 // from
                 // another widget. Leaving this behavior disabled for now but
                 // perhaps it should be configurable (and more comprehensive).
-                if (false) {
-                    if (event.hasNoModifiers()) {
-                        handled = resurrectSelectionIfNeeded()
-                                || arrowScroll(FOCUS_DOWN);
-                    } else if (event.hasModifiers(KeyEvent.META_SHIFT_ON)) {
-                        handled = resurrectSelectionIfNeeded()
-                                || arrowScroll(FOCUS_UP);
-                    }
-                }
+                // if (false) {
+                // if (event.hasNoModifiers()) {
+                // handled = resurrectSelectionIfNeeded()
+                // || arrowScroll(FOCUS_DOWN);
+                // } else if (event.hasModifiers(KeyEvent.META_SHIFT_ON)) {
+                // handled = resurrectSelectionIfNeeded()
+                // || arrowScroll(FOCUS_UP);
+                // }
+                // }
                 break;
             }
         }
@@ -1936,9 +1920,9 @@ public class HorizontalListView extends AbsListView {
             return true;
         }
 
-        if (sendToTextFilter(keyCode, count, event)) {
-            return true;
-        }
+        // if (sendToTextFilter(keyCode, count, event)) {
+        // return true;
+        // }
 
         switch (action) {
         case KeyEvent.ACTION_DOWN:
@@ -1978,7 +1962,8 @@ public class HorizontalListView extends AbsListView {
             int position = lookForSelectablePosition(nextPage, down);
             if (position >= 0) {
                 mLayoutMode = LAYOUT_SPECIFIC;
-                mSpecificLeft = mPaddingLeft + getHorizontalFadingEdgeLength();
+                mSpecificLeft = getPaddingLeft()
+                        + getHorizontalFadingEdgeLength();
 
                 if (down && position > mItemCount - getChildCount()) {
                     mLayoutMode = LAYOUT_FORCE_RIGHT;
@@ -2105,7 +2090,7 @@ public class HorizontalListView extends AbsListView {
      */
     boolean arrowScroll(int direction) {
         try {
-            mHideApiProxy.mInLayout(this, true);
+            mInLayout = true;
             final boolean handled = arrowScrollImpl(direction);
             if (handled) {
                 playSoundEffect(SoundEffectConstants
@@ -2113,7 +2098,7 @@ public class HorizontalListView extends AbsListView {
             }
             return handled;
         } finally {
-            mHideApiProxy.mInLayout(this, false);
+            mInLayout = false;
         }
     }
 
@@ -2246,14 +2231,14 @@ public class HorizontalListView extends AbsListView {
         if (direction == View.FOCUS_LEFT) {
             leftViewIndex = nextSelectedIndex;
             rightViewIndex = selectedIndex;
-            leftView = getChildAt(topViewIndex);
+            leftView = getChildAt(leftViewIndex);
             rightView = selectedView;
             leftSelected = true;
         } else {
             leftViewIndex = selectedIndex;
             rightViewIndex = nextSelectedIndex;
             leftView = selectedView;
-            rightView = getChildAt(bottomViewIndex);
+            rightView = getChildAt(rightViewIndex);
         }
 
         final int numChildren = getChildCount();
@@ -2261,7 +2246,7 @@ public class HorizontalListView extends AbsListView {
         // start with left view: is it changing size?
         if (leftView != null) {
             leftView.setSelected(!newFocusAssigned && leftSelected);
-            measureAndAdjustRight(child, childIndex, numChildren);
+            measureAndAdjustRight(leftView, leftViewIndex, numChildren);
         }
 
         // is the right view changing size?
@@ -2426,7 +2411,7 @@ public class HorizontalListView extends AbsListView {
             }
 
             if (nextSelectedPosition != INVALID_POSITION
-                    && (viewToMakeVisible.getRight() - goalRight) >= getMaxScrollAmount()) {
+                    && (viewToMakeVisible.getRight() - goalLeft) >= getMaxScrollAmount()) {
                 // item already has enough of it visible, changing selection is
                 // good enough
                 return 0;
@@ -2658,7 +2643,7 @@ public class HorizontalListView extends AbsListView {
             }
         } else {
             final int listRight = getWidth() - mListPadding.right;
-            if (mTempRect.bottom > listBottom) {
+            if (mTempRect.right > listRight) {
                 amountToScroll = mTempRect.right - listRight;
                 if (positionOfNewFocus < mItemCount - 1) {
                     amountToScroll += getArrowScrollPreviewLength();
@@ -2701,7 +2686,7 @@ public class HorizontalListView extends AbsListView {
 
         final int listRight = getWidth() - mListPadding.right;
         final int listLeft = mListPadding.left;
-        final AbsListView.RecycleBin recycleBin = mRecycler;
+        final AbsHorizontalListView.RecycleBin recycleBin = mRecycler;
 
         if (amount < 0) {
             // shifted items up
@@ -2709,11 +2694,11 @@ public class HorizontalListView extends AbsListView {
             // may need to pan views into the bottom space
             int numChildren = getChildCount();
             View last = getChildAt(numChildren - 1);
-            while (last.getBottom() < listBottom) {
+            while (last.getRight() < listRight) {
                 final int lastVisiblePosition = mFirstPosition + numChildren
                         - 1;
                 if (lastVisiblePosition < mItemCount - 1) {
-                    last = addViewBelow(last, lastVisiblePosition);
+                    last = addViewRight(last, lastVisiblePosition);
                     numChildren++;
                 } else {
                     break;
@@ -2730,7 +2715,7 @@ public class HorizontalListView extends AbsListView {
             // top views may be panned off screen
             View first = getChildAt(0);
             while (first.getRight() < listLeft) {
-                AbsListView.LayoutParams layoutParams = (LayoutParams) first
+                AbsHorizontalListView.LayoutParams layoutParams = (LayoutParams) first
                         .getLayoutParams();
                 if (recycleBin.shouldRecycleViewType(layoutParams.viewType)) {
                     detachViewFromParent(first);
@@ -2747,7 +2732,7 @@ public class HorizontalListView extends AbsListView {
 
             // may need to pan views into left
             while ((first.getLeft() > listLeft) && (mFirstPosition > 0)) {
-                first = addViewAbove(first, mFirstPosition);
+                first = addViewLeft(first, mFirstPosition);
                 mFirstPosition--;
             }
 
@@ -2762,7 +2747,7 @@ public class HorizontalListView extends AbsListView {
 
             // bottom view may be panned off screen
             while (last.getLeft() > listRight) {
-                AbsListView.LayoutParams layoutParams = (LayoutParams) last
+                AbsHorizontalListView.LayoutParams layoutParams = (LayoutParams) last
                         .getLayoutParams();
                 if (recycleBin.shouldRecycleViewType(layoutParams.viewType)) {
                     detachViewFromParent(last);
@@ -2775,7 +2760,7 @@ public class HorizontalListView extends AbsListView {
         }
     }
 
-    private View addViewBefore(View theView, int position) {
+    private View addViewLeft(View theView, int position) {
         int beforePosition = position - 1;
         View view = obtainView(beforePosition, mIsScrap);
         int edgeOfNewChild = theView.getLeft() - mDividerWidth;
@@ -2784,7 +2769,7 @@ public class HorizontalListView extends AbsListView {
         return view;
     }
 
-    private View addViewAfter(View theView, int position) {
+    private View addViewRight(View theView, int position) {
         int afterPosition = position + 1;
         View view = obtainView(afterPosition, mIsScrap);
         int edgeOfNewChild = theView.getRight() + mDividerWidth;
@@ -2818,20 +2803,20 @@ public class HorizontalListView extends AbsListView {
     @Override
     public boolean isOpaque() {
         boolean retValue = (mCachingActive && mIsCacheColorOpaque
-                && mDividerIsOpaque && hasOpaqueScrollbars())
+                && mDividerIsOpaque && mHideApiProxy.hasOpaqueScrollbars(this))
                 || super.isOpaque();
         if (retValue) {
             // only return true if the list items cover the entire area of the
             // view
             final int listLeft = mListPadding != null ? mListPadding.left
-                    : mPaddingLeft;
+                    : getPaddingLeft();
             View first = getChildAt(0);
             if (first == null || first.getLeft() > listLeft) {
                 return false;
             }
             final int listRight = getWidth()
                     - (mListPadding != null ? mListPadding.right
-                            : mPaddingRight);
+                            : getPaddingRight());
             View last = getChildAt(getChildCount() - 1);
             if (last == null || last.getRight() < listRight) {
                 return false;
@@ -2867,8 +2852,8 @@ public class HorizontalListView extends AbsListView {
             // Only modify the top and bottom in the loop, we set the left and
             // right here
             final Rect bounds = mTempRect;
-            bounds.top = mPaddingTop;
-            bounds.bottom = mBottom - mTop - mPaddingBottom;
+            bounds.left = getPaddingLeft();
+            bounds.right = getRight() - getLeft() - getPaddingRight();
 
             final int count = getChildCount();
             final int itemCount = mItemCount;
@@ -2891,17 +2876,17 @@ public class HorizontalListView extends AbsListView {
 
             int effectivePaddingLeft = 0;
             int effectivePaddingRight = 0;
-            if ((mGroupFlags & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
+            if ((mHideApiProxy.mGroupFlags(this) & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) {
                 effectivePaddingLeft = mListPadding.left;
                 effectivePaddingRight = mListPadding.right;
             }
 
-            final int listRight = mRight - mLeft - effectivePaddingRight
-                    + mScrollX;
+            final int listRight = getRight() - getLeft()
+                    - effectivePaddingRight + getScrollX();
             int right = 0;
 
             // Draw top divider or header for overscroll
-            final int scrollX = mScrollX;
+            final int scrollX = getScrollX();
             if (count > 0 && scrollX < 0) {
                 if (drawDividers) {
                     bounds.right = 0;
@@ -2919,7 +2904,7 @@ public class HorizontalListView extends AbsListView {
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         boolean more = super.drawChild(canvas, child, drawingTime);
-        if (mCachingActive && child.mCachingFailed) {
+        if (mCachingActive && mHideApiProxy.mCachingFailed(child)) {
             mCachingActive = false;
         }
         return more;
@@ -3065,30 +3050,5 @@ public class HorizontalListView extends AbsListView {
             mHideApiProxy.mLeft(v, v.getLeft() + offset);
             mHideApiProxy.mRight(v, v.getRight() + offset);
         }
-    }
-
-    private static final class HideApiProxy extends ReflectionProxy {
-
-        int mGroupFlags(ViewGroup instance) {
-            return getFieldValueAsInt(ViewGroup.class, "mGroupFlags", instance);
-        }
-
-        void mLeft(View instance, int value) {
-            setFieldValue(View.class, "mLeft", value, instance);
-        }
-
-        void mRight(View instance, int value) {
-            setFieldValue(View.class, "mRight", value, instance);
-        }
-
-        boolean mInLayout(AdapterView instance) {
-            return getFieldValueAsBoolean(AdapterView.class, "mInLayout",
-                    instance);
-        }
-
-        void mInLayout(AdapterView instance, boolean value) {
-            setFieldValue(AdapterView.class, "mInLayout", value, instance);
-        }
-
     }
 }
