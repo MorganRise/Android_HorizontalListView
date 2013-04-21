@@ -154,7 +154,12 @@ public class HorizontalListView extends AbsHorizontalListView {
         int delta;
 
         if (childCount > 0) {
-            View child = getChildAt(0);
+            View child;
+
+            // if (!mStackFromBottom) {
+            // Uh-oh -- we came up short. Slide all views up to make them
+            // align with the top
+            child = getChildAt(0);
             delta = child.getLeft() - mListPadding.left;
             if (mFirstPosition != 0) {
                 // It's OK to have some space above the first item if it is
@@ -162,24 +167,24 @@ public class HorizontalListView extends AbsHorizontalListView {
                 delta -= mDividerWidth;
             }
             if (delta < 0) {
-                // We only are looking to see if we are too low, not too
-                // high
+                // We only are looking to see if we are too low, not too high
                 delta = 0;
-            } else {
-                // we are too high, slide all views down to align with bottom
-                child = getChildAt(childCount - 1);
-                delta = child.getRight() - (getWidth() - mListPadding.right);
-
-                if (mFirstPosition + childCount < mItemCount) {
-                    // It's OK to have some space below the last item if it is
-                    // part of the vertical spacing
-                    delta += mDividerWidth;
-                }
-
-                if (delta > 0) {
-                    delta = 0;
-                }
             }
+            // } else {
+            // // we are too high, slide all views down to align with bottom
+            // child = getChildAt(childCount - 1);
+            // delta = child.getBottom() - (getHeight() - mListPadding.bottom);
+            //
+            // if (mFirstPosition + childCount < mItemCount) {
+            // // It's OK to have some space below the last item if it is
+            // // part of the vertical spacing
+            // delta += mDividerWidth;
+            // }
+            //
+            // if (delta > 0) {
+            // delta = 0;
+            // }
+            // }
 
             if (delta != 0) {
                 offsetChildrenLeftAndRight(-delta);

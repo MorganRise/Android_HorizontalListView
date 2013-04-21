@@ -90,20 +90,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
     private static final String TAG = "AbsHorizontalListView";
 
     /**
-     * When set, this ViewGroup should not intercept touch events. {@hide
-     * 
-     * 
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * }
+     * When set, this ViewGroup should not intercept touch events.
      */
     protected static final int FLAG_DISALLOW_INTERCEPT = 0x80000;
 
@@ -793,14 +780,14 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
 
         void offsetLeftAndRight(View view, int offset) {
             invoke(View.class, "offsetLeftAndRight", view,
-                    new Class<?>[] { Integer.class }, new Object[] { offset });
+                    new Class<?>[] { int.class }, new Object[] { offset });
         }
 
         boolean isScrollingInDirection(OverScroller scroller, float xvel,
                 float yvel) {
             return (Boolean) invoke(OverScroller.class,
                     "isScrollingInDirection", scroller, new Class<?>[] {
-                            Float.class, Float.class }, new Object[] { xvel,
+                            float.class, float.class }, new Object[] { xvel,
                             yvel });
         }
     }
@@ -1562,7 +1549,7 @@ public abstract class AbsHorizontalListView extends AdapterView<ListAdapter>
         super.onRestoreInstanceState(ss.getSuperState());
         mDataChanged = true;
 
-        mSyncHeight = ss.width;
+        mSyncWidth = ss.width;
 
         if (ss.selectedId >= 0) {
             mNeedSync = true;

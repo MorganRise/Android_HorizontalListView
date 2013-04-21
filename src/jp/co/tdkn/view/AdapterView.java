@@ -88,9 +88,9 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     long mSyncColId = INVALID_COL_ID;
 
     /**
-     * Height of the view when mSyncPosition and mSyncRowId where set
+     * Width of the view when mSyncPosition and mSyncColId where set
      */
-    long mSyncHeight;
+    long mSyncWidth;
 
     /**
      * True if we need to sync to mSyncRowId
@@ -105,9 +105,9 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     int mSyncMode;
 
     /**
-     * Our height after the last layout
+     * Our width after the last layout
      */
-    private int mLayoutHeight;
+    private int mLayoutWidth;
 
     /**
      * Sync based on the selected child
@@ -592,7 +592,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right,
             int bottom) {
-        mLayoutHeight = getHeight();
+        mLayoutWidth = getWidth();
     }
 
     /**
@@ -1274,7 +1274,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
     void rememberSyncState() {
         if (getChildCount() > 0) {
             mNeedSync = true;
-            mSyncHeight = mLayoutHeight;
+            mSyncWidth = mLayoutWidth;
             if (mSelectedPosition >= 0) {
                 // Sync the selection state
                 View v = getChildAt(mSelectedPosition - mFirstPosition);
